@@ -1,1 +1,4 @@
-./backend/venv
+settings.json
+
+/backend/venv
+/backend/app/__pycache__
