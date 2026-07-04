@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import Chart from './components/Graph'
+import Slider from './components/Slider'
 
 function App() {
-  const [days, setDays] = useState(0)
-  const [count, setCount] = useState(0)
 
   return (
     <main className="py-10">
@@ -13,24 +12,9 @@ function App() {
       {/* Interactive chart */}
       <Chart />
 
-      {/* Slider */}
-      <div>
-        <label>
-          <input type="range" min="0" max="5" step="1" value={days} onChange={(e) => setDays(Number(e.currentTarget.value))}/>
-          <span>
-            {days}
-          </span>
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <input type="range" min="0" max="5" step="1" value={count} onChange={(e) => setCount(Number(e.currentTarget.value))}/>
-          <span>
-            {count}
-          </span>
-        </label>
-      </div>
+      {/* Slider2 */}
+      <Slider name="Days" max={ 5 } />
+      <Slider name="Transmission Rate" max = { 2 } />
 
     </main>
   )
