@@ -7,6 +7,6 @@ export const dummyData: Day[] = [
     },
     {
         day: 1,
-        susceptible: 8
+        susceptible: 100
     },
 ];
