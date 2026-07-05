@@ -22,12 +22,24 @@ app.add_middleware(
     allow_headers = ["*"]
 )
 
+params = {
+    "days": 100,
+    "beta": 1/2,
+    "gamma": 1/5,
+    "N": 1000,
+    "I0": 6,
+    "R0": 0
+}
+
 @app.get("/", tags = ["root"])
 async def read_root() -> dict:
     return {"message" : "Welcome to the website!"}
 
 @app.get("/api", tags = ["api"])
-async def show_outbreakr() -> dict:
-    return {"outbreaks" : fit_sir(days=100, beta=1/2, gamma=1/5, N=1000, I0=6, R0=0)}
+async def show_graph() -> dict:
+    return {"outbreaks" : fit_sir(**params)}
 
-
+@app.post("/api", tags = ["api"])
+async def update_graph(param: str, value: float) -> dict:
+    params[param] = value
+    return {"message" : "Graph updated."}
