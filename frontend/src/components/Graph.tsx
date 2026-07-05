@@ -10,11 +10,14 @@ import Slider from './Slider'
  */
 export default function Chart() {
     const [outbreak, setOutbreak] = useState([])
+    const [pop, setPop] = useState(1000)
 
     const fetchOutbreak = async () => {
         const response = await fetch("http://localhost:8000/api")
         const outbreak = await response.json()
         setOutbreak(outbreak.outbreaks)
+
+        console.log(pop)
     }
 
     useEffect(() => {
@@ -38,8 +41,11 @@ export default function Chart() {
             </LineChart>
 
             {/* Sliders */}
-            <Slider name="days" max={ 100 } min={ 1 } onUpdate ={ fetchOutbreak }/>
-            <Slider name="Transmission Rate" max = { 2 } />
+            <Slider name="days" max={ 100 } min={ 1 } by={ 1 } start={ 100 } onUpdate ={ fetchOutbreak }/>
+            <Slider name="beta" max = { 2 } by={ .1 } start={ 0.5 } onUpdate={ fetchOutbreak } />
+            <Slider name="gamma" max = { 2 } by={ .1 } start={ 0.2 } onUpdate={ fetchOutbreak } />
+            <Slider name="N" max = { 1000 } by={ 20 } start={ pop } onUpdate={ fetchOutbreak } onChangeValue={ setPop } />
+            <Slider name="I0" max = { pop } by={ 1 } start={ 0 } onUpdate={ fetchOutbreak } />
         </div>
     )
 }
