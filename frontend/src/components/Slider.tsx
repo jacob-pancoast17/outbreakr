@@ -9,9 +9,22 @@ import { useState } from 'react'
  * 
  * @returns Slider component for React used in App.tsx
  */
-export default function Slider({ name, min = 0, max }: { name: string; min: number; max: number }) {
+export default function Slider({ name, min = 0, max, onUpdate }: { name: string; min?: number; max: number; onUpdate: () => void }) {
 
     const [count, setCount] = useState(0)
+
+    const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Number(event.currentTarget.value)
+        setCount(value)
+
+        await fetch("http://localhost:8000/api", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, value })
+        })
+        
+        onUpdate()
+    }
 
     return (
         <div>
@@ -19,7 +32,7 @@ export default function Slider({ name, min = 0, max }: { name: string; min: numb
 
             <div>
             <label>
-            <input type="range" min={ min } max={ max } step="1" value={count} onChange={(e) => setCount(Number(e.currentTarget.value))}/>
+            <input type="range" min={ min } max={ max } step="1" value={count} onChange={handleSubmit}/>
             <span>
                 {count}
             </span>

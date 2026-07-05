@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Chart from './components/Graph'
-import Slider from './components/Slider'
 
 function App() {
 
@@ -11,10 +10,6 @@ function App() {
 
       {/* Interactive chart */}
       <Chart />
-
-      {/* Slider2 */}
-      <Slider name="Days" max={ 5 } />
-      <Slider name="Transmission Rate" max = { 2 } />
 
     </main>
   )
