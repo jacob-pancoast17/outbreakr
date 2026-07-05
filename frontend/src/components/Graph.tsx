@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Legend } from 'recharts';
 
 
+/**
+ * Creates a Graph component using the FastAPI backend.
+ * 
+ * @returns Graph component for React used in App.tsx.
+ */
 export default function Chart() {
     const [outbreak, setOutbreak] = useState([])
 
