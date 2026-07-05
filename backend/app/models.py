@@ -45,7 +45,7 @@ def fit_sir(days, beta, gamma, N, I0, R0):
         matrix: A (# days) * 3 matrix showing the solved system of diffeqs for the fit SIR model.
     '''
 
-    times = np.arange(0, days, 1)
+    times = np.arange(0, days + 1, 1)
     S0 = N - I0
 
     solved = odeint(dAdt, y0 = [S0, I0, R0], t = times, args = (beta, gamma, N))

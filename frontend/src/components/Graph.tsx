@@ -38,7 +38,7 @@ export default function Chart() {
             </LineChart>
 
             {/* Sliders */}
-            <Slider name="days" max={ 100 } onUpdate ={ fetchOutbreak }/>
+            <Slider name="days" max={ 100 } min={ 1 } onUpdate ={ fetchOutbreak }/>
             <Slider name="Transmission Rate" max = { 2 } />
         </div>
     )
