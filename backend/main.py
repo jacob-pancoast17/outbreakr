@@ -1,3 +1,7 @@
+'''
+The main entry point for the program.
+'''
+
 import uvicorn
 
 if __name__ == "__main__":
