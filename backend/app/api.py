@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import odeint
+import json
 
 app = FastAPI()
 
@@ -23,10 +24,6 @@ app.add_middleware(
 async def read_root() -> dict:
     return {"message" : "Welcome to the website!"}
 
-@app.get("/api/outbreakr", tags = ["outbreakr"])
-async def show_outbreakr() -> dict:
-    return {"outbreaks" : "wip"}
-
 def dAdt(A, T, beta, gamma, N):
     S = A[0]
     I = A[1]
@@ -46,11 +43,16 @@ S0, I0, R0 = N - 6, 6, 0
 
 solved = odeint(dAdt, y0 = [S0, I0, R0], t = times, args = (beta, gamma, N))
 solved_transposed = solved.transpose()
+solved_transposed = [[entry.item() for entry in sublist] for sublist in solved_transposed]
 
-plt.plot(times, solved_transposed[0], label = "Susceptible")
-plt.plot(times, solved_transposed[1], label = "Infected")
-plt.plot(times, solved_transposed[2], label = "Removed")
+sir = []
 
-plt.legend()
+for i in range(len(solved_transposed[0])):
+    sir.append({"day": i, "susceptible": solved_transposed[0][i], "infectious": solved_transposed[1][i], "recovered": solved_transposed[2][i]})
 
-plt.show()
+@app.get("/api", tags = ["api"])
+async def show_outbreakr() -> dict:
+    return {"outbreaks" : sir}
+
+
+

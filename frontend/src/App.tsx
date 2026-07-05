@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Chart from './components/Graph'
 import Slider from './components/Slider'
 
