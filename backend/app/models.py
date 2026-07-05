@@ -6,6 +6,19 @@ import numpy as np
 from scipy.integrate import odeint
 
 def dAdt(A, T, beta, gamma, N):
+    '''
+    Creates the system of differential equations for the SIR model.
+
+    Args:
+        A (list): Values at time point 0 for S, I, R.
+        T (list): Time intervals (ex. a list of days 0-100).
+        beta (float): Transmission rate (# contacts per person per day * transmissivity).
+        gamma (float): Recovery rate (reciprocal of average days in infectious state).
+        N (int): Population size.
+
+    Returns:
+        list: System of differential equations for SIR model.
+    '''
     S = A[0]
     I = A[1]
     R = A[2]
@@ -17,6 +30,20 @@ def dAdt(A, T, beta, gamma, N):
     ]
 
 def fit_sir(days, beta, gamma, N, I0, R0):
+    '''
+    Solves the system of differential equations for the SIR model.
+
+    Args:
+        days (int): The length of the study period in days.
+        beta (float): Transmission rate (# contacts per person per day * transmissivity).
+        gamma (float): Recovery rate (reciprocal of average days in infectious state).
+        N (int): Population size.
+        I0 (int): The number of people infected at time step 0.
+        R0 (int): The number of people recovered at time step 0.
+
+    Returns:
+        matrix: A (# days) * 3 matrix showing the solved system of diffeqs for the fit SIR model.
+    '''
 
     times = np.arange(0, days, 1)
     S0 = N - I0
