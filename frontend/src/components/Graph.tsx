@@ -21,7 +21,11 @@ export default function Chart() {
             <XAxis dataKey="day" />
             <YAxis width="auto" />
             <Legend />
-            <Line type="monotone" dataKey="susceptible" stroke="#2846a8" activeDot={{ r: 8}}/>
+
+            {/* Lines for S, I, R */}
+            <Line type="monotone" dataKey="susceptible" stroke="#2846a8" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="infectious" stroke="#d18d26" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="recovered" stroke="#219e1b" activeDot={{ r: 8 }} />
                 
         </LineChart>
     )
