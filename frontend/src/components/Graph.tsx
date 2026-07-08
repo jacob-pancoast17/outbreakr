@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { CartesianGrid, Line, LineChart, XAxis, YAxis, Legend } from 'recharts';
+import { CartesianGrid, Line, LineChart, XAxis, YAxis, Legend, Tooltip } from 'recharts';
 import Slider from './Slider'
+import NumericInput from './NumericInput'
+import {NumberInputParam } from '../types/NumberInputParam'
 
 
 /**
@@ -16,8 +18,6 @@ export default function Chart() {
         const response = await fetch("http://localhost:8000/api")
         const outbreak = await response.json()
         setOutbreak(outbreak.outbreaks)
-
-        console.log(pop)
     }
 
     useEffect(() => {
@@ -27,10 +27,14 @@ export default function Chart() {
     return (
         <div>
             {/* Graph */}
-            <LineChart style={{ width: '100%', aspectRatio: 1.618, maxWidth: 800, margin: 'auto'}} responsive data={outbreak}>
+            <LineChart 
+                style={{ width: '100%', aspectRatio: 1.618, maxWidth: 800, margin: 'auto'}} 
+                responsive 
+                data={outbreak}>
                 <CartesianGrid strokeDasharray="5 5" />
                 <XAxis dataKey="day" />
                 <YAxis width="auto" />
+                <Tooltip formatter={(value) => Number(value).toFixed(2)} />
                 <Legend />
 
                 {/* Lines for S, I, R */}
@@ -41,11 +45,12 @@ export default function Chart() {
             </LineChart>
 
             {/* Sliders */}
-            <Slider name="days" max={ 100 } min={ 1 } by={ 1 } start={ 100 } onUpdate ={ fetchOutbreak }/>
+            <NumericInput name="days" inputParam={ { min:1, max:1000, start:100 } as NumberInputParam }  onUpdate={ fetchOutbreak } />
             <Slider name="beta" max = { 2 } by={ .1 } start={ 0.5 } onUpdate={ fetchOutbreak } />
             <Slider name="gamma" max = { 2 } by={ .1 } start={ 0.2 } onUpdate={ fetchOutbreak } />
             <Slider name="N" max = { 1000 } by={ 20 } start={ pop } onUpdate={ fetchOutbreak } onChangeValue={ setPop } />
             <Slider name="I0" max = { pop } by={ 1 } start={ 0 } onUpdate={ fetchOutbreak } />
+            
         </div>
     )
 }
