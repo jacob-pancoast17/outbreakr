@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Legend, Tooltip } from 'recharts';
-import Slider from './Slider'
-import NumericInput from './NumericInput'
-import {NumberInputParam } from '../types/NumberInputParam'
-
+import Dashboard from './Dashboard'
 
 /**
  * Creates a Graph component using the FastAPI backend.
@@ -44,12 +41,7 @@ export default function Chart() {
                     
             </LineChart>
 
-            {/* Sliders */}
-            <NumericInput name="days" inputParam={ { min:1, max:1000, start:100 } as NumberInputParam }  onUpdate={ fetchOutbreak } />
-            <Slider name="beta" max = { 2 } by={ .1 } start={ 0.5 } onUpdate={ fetchOutbreak } />
-            <Slider name="gamma" max = { 2 } by={ .1 } start={ 0.2 } onUpdate={ fetchOutbreak } />
-            <Slider name="N" max = { 1000 } by={ 20 } start={ pop } onUpdate={ fetchOutbreak } onChangeValue={ setPop } />
-            <Slider name="I0" max = { pop } by={ 1 } start={ 0 } onUpdate={ fetchOutbreak } />
+            <Dashboard population={ pop } onUpdate={ fetchOutbreak } onChange={ setPop }/>
             
         </div>
     )
