@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CartesianGrid, Line, LineChart, XAxis, YAxis, Legend, Tooltip } from 'recharts';
+import { ResponsiveContainer, CartesianGrid, Line, LineChart, XAxis, YAxis, Legend, Tooltip } from 'recharts';
 import Dashboard from './Dashboard'
 
 /**
@@ -22,24 +22,27 @@ export default function Chart() {
     }, [])
 
     return (
-        <div>
+        <div className="grid grid-cols-[1.5fr_1fr]">
             {/* Graph */}
-            <LineChart 
-                style={{ width: '100%', aspectRatio: 1.618, maxWidth: 800, margin: 'auto'}} 
-                responsive 
-                data={outbreak}>
-                <CartesianGrid strokeDasharray="5 5" />
-                <XAxis dataKey="day" />
-                <YAxis width="auto" />
-                <Tooltip formatter={(value) => Number(value).toFixed(2)} />
-                <Legend />
+            <div className="min-w-0">
+                <ResponsiveContainer width="100%" aspect={1.618}>
+                    <LineChart 
+                        responsive 
+                        data={outbreak}>
+                        <CartesianGrid strokeDasharray="5 5" />
+                        <XAxis dataKey="day" />
+                        <YAxis width="auto" />
+                        <Tooltip formatter={(value) => Number(value).toFixed(2)} />
+                        <Legend />
 
-                {/* Lines for S, I, R */}
-                <Line type="monotone" dataKey="susceptible" stroke="#2846a8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="infectious" stroke="#d18d26" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="recovered" stroke="#219e1b" activeDot={{ r: 8 }} />
-                    
-            </LineChart>
+                        {/* Lines for S, I, R */}
+                        <Line type="monotone" dataKey="susceptible" stroke="#2846a8" activeDot={{ r: 8 }} />
+                        <Line type="monotone" dataKey="infectious" stroke="#d18d26" activeDot={{ r: 8 }} />
+                        <Line type="monotone" dataKey="recovered" stroke="#219e1b" activeDot={{ r: 8 }} />
+                            
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
 
             <Dashboard population={ pop } onUpdate={ fetchOutbreak } onChange={ setPop }/>
             

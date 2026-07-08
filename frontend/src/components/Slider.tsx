@@ -43,18 +43,16 @@ export default function Slider({ name, inputParam, onUpdate, onChangeValue }: {
         }
 
         return (
-            <div>
-                <label className="flex items-center justify-center gap-3 p-2">
-                    <label className="font-bold">
-                        <h2>{ name }</h2>    
-                    </label>
+            <div className="flex items-center justify-center gap-3 p-2 border border-gray-400 rounded-md shadow">
+                <h2 className="font-bold">
+                    { name }
+                </h2>    
                     
-                    <label className="">
-                        <input type="range" min={ min } max={ max } step={ by } defaultValue={ start } onChange={ handleSubmit }/>
-                        <span>
-                            {count}
-                        </span>
-                    </label>
+                <label className="">
+                    <input type="range" min={ min } max={ max } step={ by } defaultValue={ start } onChange={ handleSubmit }/>
+                    <span>
+                        {count}
+                    </span>
                 </label>
             </div>
         )

@@ -5,16 +5,18 @@ import { NumberInputParam } from '../types/NumberInputParam'
  * Creates a Slider component with a title.
  * 
  * @param name - The name of the value the Slider changes (string).
- * @param min - The minimum value of the slider (number).
- * @param max - The maximum value of the slider (number).
+ * @param inputParam - The values to be used for the input box (NumberInputParam interface).
+ * @param onUpdate - The function that runs whenever an input is updated (function).
+ * @param onChange - The function that runs when the population is changed (function).
  * 
  * @returns Slider component for React used in App.tsx
  */
-export default function Slider({ name, inputParam, onUpdate, onChangeValue }: { 
+export default function Slider({ name, inputParam, onUpdate, onChangeValue, description }: { 
     name: string;
     inputParam: NumberInputParam;
     onUpdate: () => void;
-    onChangeValue?: (value: number) => void }) {
+    onChangeValue?: (value: number) => void;
+    description: string }) {
 
         const { min, max, start } = inputParam
 
@@ -45,15 +47,13 @@ export default function Slider({ name, inputParam, onUpdate, onChangeValue }: {
         }
 
         return (
-            <div>
-                <label className="flex items-center justify-center gap-3 p-2">
-                    <label className="font-bold">
-                        <h2>{ name }</h2>        
-                    </label>
+            <div className="flex items-center justify-center gap-3 p-2 border border-gray-400 rounded-md shadow">
+                <h2 className="">
+                    { description }
+                </h2>        
 
-                    <label className="hover:bg-neutral-200">
-                        <input type="number" min={ min } max={ max } defaultValue={ start } onChange={ handleSubmit }/>
-                    </label>
+                <label className="hover:bg-neutral-200">
+                    <input type="number" min={ min } max={ max } defaultValue={ start } onChange={ handleSubmit }/>
                 </label>
             </div>
         )
