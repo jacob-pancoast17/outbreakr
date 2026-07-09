@@ -11,12 +11,13 @@ import { NumberInputParam } from '../types/NumberInputParam'
  * 
  * @returns Slider component for React used in App.tsx
  */
-export default function Slider({ name, inputParam, onUpdate, onChangeValue, description }: { 
+export default function Slider({ name, inputParam, onUpdate, onChangeValue, description, unit }: { 
     name: string;
     inputParam: NumberInputParam;
     onUpdate: () => void;
     onChangeValue?: (value: number) => void;
-    description: string }) {
+    description: string;
+    unit: string }) {
 
         const { min, max, start } = inputParam
 
@@ -48,9 +49,12 @@ export default function Slider({ name, inputParam, onUpdate, onChangeValue, desc
 
         return (
             <div className="flex items-center justify-center gap-3 p-2 border border-gray-400 rounded-md shadow">
-                <h2 className="">
+                <div className="font-bold">
                     { description }
-                </h2>        
+                </div>
+                <div>
+                    ({ unit }):
+                </div>
 
                 <label className="hover:bg-neutral-200">
                     <input type="number" min={ min } max={ max } defaultValue={ start } onChange={ handleSubmit }/>

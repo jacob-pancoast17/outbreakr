@@ -22,7 +22,7 @@ export default function Chart() {
     }, [])
 
     return (
-        <div className="grid grid-cols-[1.5fr_1fr]">
+        <div className="grid grid-cols-[1.5fr_1fr] gap-10 p-4 md:p-7 lg:p-10">
             {/* Graph */}
             <div className="min-w-0">
                 <ResponsiveContainer width="100%" aspect={1.618}>
