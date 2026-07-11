@@ -2,6 +2,7 @@ import Slider from './Slider'
 import NumericInput from './NumericInput'
 import { NumberInputParam } from '../types/NumberInputParam'
 import { SliderInputParam } from '../types/SliderInputParam'
+import { AdvancedInputParam } from '../types/AdvancedInputParam'
 
 /**
  * Creates a Dashboard component with graph inputs.
@@ -29,10 +30,26 @@ export default function Dashboard({ population, onUpdate, onChange }: {
             <div className="flex flex-col gap-y-2">
                 <NumericInput 
                     name="days" 
-                    inputParam={ { min:1, max:1000, start:100 } as NumberInputParam }  
+                    inputParam={ { min:1, max:1000, start:50 } as NumberInputParam }  
                     onUpdate={ onUpdate } 
                     description="Outbreak Length"
                     unit="days"/>
+                
+                <div className="grid grid-cols-2 ">
+                    <NumericInput 
+                        name="N" 
+                        inputParam={ { min:0, max:1000, start:population } as NumberInputParam } 
+                        onUpdate={ onUpdate } 
+                        onChangeValue={ onChange }
+                        description="Population Size (N)"
+                        vertical={ true }/>
+
+                    <Slider 
+                        name="I0" 
+                        inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
+                        onUpdate={ onUpdate } 
+                        title="Initial Infected Population (I₀)"/>
+                </div>
 
                 <div className="grid grid-cols-2">
                     <Slider 
@@ -41,7 +58,12 @@ export default function Dashboard({ population, onUpdate, onChange }: {
                         onUpdate={ onUpdate }
                         title="Transmission Rate (β)"
                         description="The average number of new infections an infected person creates per unit time."
-                        unit="per person, per day" />
+                        unit="per person, per day"
+                        advanced={ {
+                            expression:"contacts per person per day * transmissivity",
+                            inputParam:[{ max:2, by:0.1, start:0.5 } as SliderInputParam,
+                            { max:1, by:0.1, start:0.5 } as SliderInputParam] 
+                        } as AdvancedInputParam }/>
                     <Slider 
                         name="gamma" 
                         inputParam={ { max:2, by:0.1, start:0.2 } as SliderInputParam } 
@@ -50,17 +72,6 @@ export default function Dashboard({ population, onUpdate, onChange }: {
                         description="The chance an infected person has to recover per unit time."
                         unit="recover per day" />
                 </div>
-                <Slider 
-                    name="N" 
-                    inputParam={ { max:1000, by:20, start:population } as SliderInputParam } 
-                    onUpdate={ onUpdate } 
-                    onChangeValue={ onChange } 
-                    title="Population Size"/>
-                <Slider 
-                    name="I0" 
-                    inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
-                    onUpdate={ onUpdate } 
-                    title="Initial Infected Population"/>
             </div>
         </div>
     )

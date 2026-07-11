@@ -11,17 +11,21 @@ import { NumberInputParam } from '../types/NumberInputParam'
  * 
  * @returns Slider component for React used in App.tsx
  */
-export default function Slider({ name, inputParam, onUpdate, onChangeValue, description, unit }: { 
+export default function NumericInput({ name, inputParam, onUpdate, onChangeValue, description, unit, vertical }: { 
     name: string;
     inputParam: NumberInputParam;
     onUpdate: () => void;
     onChangeValue?: (value: number) => void;
     description: string;
-    unit: string }) {
+    unit?: string;
+    vertical?: boolean }) {
 
         const { min, max, start } = inputParam
 
-        const [count, setCount] = useState(start)
+        const [count, setCount] = useState(() => {
+            const saved = localStorage.getItem(`param-${name}`)
+            return saved !== null ? Number(saved) : start
+        })
 
         useEffect(() => {
             if (count > max) {
@@ -36,6 +40,7 @@ export default function Slider({ name, inputParam, onUpdate, onChangeValue, desc
             value = Math.max(Math.min(max, value), min)
 
             setCount(value)
+            localStorage.setItem(`param-${name}`, String(value))
             onChangeValue?.(value)
 
             await fetch("http://localhost:8000/api", {
@@ -48,16 +53,22 @@ export default function Slider({ name, inputParam, onUpdate, onChangeValue, desc
         }
 
         return (
-            <div className="flex items-center justify-center gap-3 p-2 border border-gray-400 rounded-md shadow">
-                <div className="font-bold">
-                    { description }
+            <div className={`flex ${vertical ? 'flex-col' : ''} items-center justify-center gap-1 p-2 border border-gray-400 rounded-md shadow`} >
+                <div className="flex flex-row gap-1">
+                    <div className="font-bold">
+                        { description } 
+                    </div>
+                    
+                    { unit && (
+                        <div>
+                            ({ unit })
+                            { ":" }
+                        </div>
+                    )}
                 </div>
-                <div>
-                    ({ unit }):
-                </div>
-
-                <label className="hover:bg-neutral-200">
-                    <input type="number" min={ min } max={ max } defaultValue={ start } onChange={ handleSubmit }/>
+                
+                <label className="flex justify-center">
+                    <input type="number" min={ min } max={ max } defaultValue={ count } placeholder={ String(min) } onChange={ handleSubmit }/>
                 </label>
             </div>
         )

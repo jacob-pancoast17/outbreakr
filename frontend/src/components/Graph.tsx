@@ -31,7 +31,7 @@ export default function Chart() {
                         data={outbreak}>
                         <CartesianGrid strokeDasharray="5 5" />
                         <XAxis dataKey="day" />
-                        <YAxis width="auto" />
+                        <YAxis width={40} />
                         <Tooltip formatter={(value) => Number(value).toFixed(2)} />
                         <Legend />
 
