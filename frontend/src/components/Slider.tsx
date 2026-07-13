@@ -83,9 +83,10 @@ export default function Slider({ name, inputParam, onUpdate, onChangeValue, titl
                     </div>
                 </div>
 
+                {/** Advanced options button (OPTIONAL) */}
                 { advanced !== undefined && (
-                    <div className="hover:bg-amber-300">
-                        <button type="button" onClick={ () => setChange(true) }>Click</button>
+                    <div className="flex text-sm text-slate-500 italic hover:bg-gray-100 px-4 w-fit items-center justify-self-center">
+                        <button type="button" onClick={ () => setChange(!change) }>Advanced Options</button>
                     </div>
                 )}
 
