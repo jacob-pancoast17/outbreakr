@@ -39,6 +39,10 @@ async def read_root() -> dict:
 async def show_graph() -> dict:
     return {"outbreaks" : fit_sir(**params)}
 
+@app.get("/params", tags = [])
+async def get_params() -> dict:
+    return {"params" : params}
+
 @app.post("/api", tags = ["api"])
 async def update_graph(update: dict) -> dict:
     params[update.get("name")] = update.get("value")
