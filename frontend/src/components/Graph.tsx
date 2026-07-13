@@ -13,7 +13,8 @@ export default function Chart() {
     const [seir, setSeir] = useState(false)
 
     const fetchOutbreak = async () => {
-        const response = await fetch("http://localhost:8000/api")
+        const endpoint = seir ? "seir" : "sir"
+        const response = await fetch(`http://localhost:8000/${endpoint}`)
         const outbreak = await response.json()
         setOutbreak(outbreak.outbreaks)
     }
@@ -29,7 +30,7 @@ export default function Chart() {
                 <div className="grid grid-cols-3">
 
                     <div></div> { /* Placeholder */ }
-                    <h1 className="text-3xl text-center">SIR Model</h1>
+                    <h1 className="text-3xl text-center">S{ seir === true ? "E" : "" }IR Model</h1>
                 
                     <label className="flex justify-end items-center p-2">
                             SEIR mode { seir === true ? "enabled" : "disabled" }
@@ -60,7 +61,7 @@ export default function Chart() {
                 </ResponsiveContainer>
             </div>
 
-            <Dashboard population={ pop } onUpdate={ fetchOutbreak } onChange={ setPop }/>
+            <Dashboard population={ pop } seir={ seir } onUpdate={ fetchOutbreak } onChange={ setPop }/>
             
         </div>
     )

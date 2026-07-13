@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import Slider from './Slider'
+import ModelParameterSlider from './ModelParameterSlider'
+import InitialConditionSlider from './InitialConditionSlider'
 import NumericInput from './NumericInput'
 import { NumberInputParam } from '../types/NumberInputParam'
 import { SliderInputParam } from '../types/SliderInputParam'
@@ -11,11 +12,13 @@ import { AdvancedInputParam } from '../types/AdvancedInputParam'
  * @param population - The current population size (number).
  * @param onUpdate - The function that runs whenever an input is updated (function).
  * @param onChange - The function that runs when the population is changed (function).
+ * @param seir - Is the dashboard currently in SEIR mode? (boolean)
  * 
  * @returns Dashboard component for React used in Graph.tsx.
  */
-export default function Dashboard({ population, onUpdate, onChange }: {
+export default function Dashboard({ population, seir, onUpdate, onChange }: {
     population: number,
+    seir: boolean,
     onUpdate: () => void,
     onChange: (value: number) => void }) {
 
@@ -38,69 +41,90 @@ export default function Dashboard({ population, onUpdate, onChange }: {
         }
 
         return (
-            <div className="flex flex-col max-w-lg gap-y-5">
+            <div className="flex flex-col max-w-lg gap-y-3">
 
                 {/* Title */}
                 <h1 className="font-bold text-2xl text-center">
                     Parameters
                 </h1>
 
-                {/* Parameters */}
-                <div className="flex flex-col gap-y-2">
-                    <NumericInput 
-                        name="days" 
-                        inputParam={ { min:1, max:1000, start:50 } as NumberInputParam }  
+            {/* Parameters */}
+                {/* Days input */}
+                <NumericInput 
+                    name="days" 
+                    inputParam={ { min:1, max:1000, start:50 } as NumberInputParam }  
+                    onUpdate={ handleUpdate } 
+                    description="Outbreak Length"
+                    unit="days"/>
+                
+                {/* Pop size input (N) */}
+                <NumericInput 
+                    name="N" 
+                    inputParam={ { min:0, max:1000, start:population } as NumberInputParam } 
+                    onUpdate={ handleUpdate } 
+                    onChangeValue={ onChange }
+                    description="Population Size (N)"
+                    vertical={ true }/>
+
+                <div className="flex flex-col items-center justify-center p-2 gap-2 border border-gray-400' rounded-md shadow">
+                    {/* Initial exposed pop (E₀) */}
+                    { seir === true && (
+                    <InitialConditionSlider
+                        name="E0" 
+                        inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
                         onUpdate={ handleUpdate } 
-                        description="Outbreak Length"
-                        unit="days"/>
-                    
-                    <div className="grid grid-cols-2 ">
-                        <NumericInput 
-                            name="N" 
-                            inputParam={ { min:0, max:1000, start:population } as NumberInputParam } 
-                            onUpdate={ handleUpdate } 
-                            onChangeValue={ onChange }
-                            description="Population Size (N)"
-                            vertical={ true }/>
+                        title="Initial Exposed Population (E₀)"/>
+                    )}
 
-                        <Slider 
-                            name="I0" 
-                            inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
-                            onUpdate={ handleUpdate } 
-                            title="Initial Infected Population (I₀)"/>
-                    </div>
+                    {/* Initial infected pop (I₀) */}
+                    <InitialConditionSlider
+                        name="I0" 
+                        inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
+                        onUpdate={ handleUpdate } 
+                        title="Initial Infected Population (I₀)"/>
 
-                    <div className="grid grid-cols-2">
-                        <Slider 
-                            name="beta" 
-                            inputParam={ { max:2, by:0.1, start:0.5 } as SliderInputParam } 
-                            onUpdate={ handleUpdate }
-                            title="Transmission Rate (β)"
-                            description="The average number of new infections an infected person creates per unit time."
-                            unit="per person, per day"
-                            advanced={ {
-                                expression:"contacts per person per day * transmissivity",
-                                inputParam:[{ max:2, by:0.1, start:0.5 } as SliderInputParam,
-                                { max:1, by:0.1, start:0.5 } as SliderInputParam] 
-                            } as AdvancedInputParam }/>
-                        <Slider 
-                            name="gamma" 
-                            inputParam={ { max:2, by:0.1, start:0.2 } as SliderInputParam } 
-                            onUpdate={ handleUpdate } 
-                            title="Recovery Rate (γ)"
-                            description="The chance an infected person has to recover per unit time."
-                            unit="recover per day" />
-                    </div>
+                    {/* Initial recovered pop (R₀) */}
+                    <InitialConditionSlider
+                        name="R0" 
+                        inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
+                        onUpdate={ handleUpdate } 
+                        title="Initial Recovered Population (R₀)"/>
+                </div>
 
-                    <div className="p-2 gap-2 border border-gray-400' rounded-md shadow" >
-                        <div className="flex justify-center gap-1">
-                            <div className="">
-                                R0: 
-                            </div>
-                            { R0.toFixed(2) }
+                <div className="grid grid-cols-2">
+                    {/* Transmission Rate (β) */}
+                    <ModelParameterSlider 
+                        name="beta" 
+                        inputParam={ { max:2, by:0.1, start:0.5 } as SliderInputParam } 
+                        onUpdate={ handleUpdate }
+                        title="Transmission Rate (β)"
+                        description="The average number of new infections an infected person creates per unit time."
+                        unit="per person, per day"
+                        advanced={ {
+                            expression:"contacts per person per day * transmissivity",
+                            inputParam:[{ max:2, by:0.1, start:0.5 } as SliderInputParam,
+                            { max:1, by:0.1, start:0.5 } as SliderInputParam] 
+                        } as AdvancedInputParam }/>
+
+
+                    {/* Recovery Rate (γ) */}
+                    <ModelParameterSlider 
+                        name="gamma" 
+                        inputParam={ { max:2, by:0.1, start:0.2 } as SliderInputParam } 
+                        onUpdate={ handleUpdate } 
+                        title="Recovery Rate (γ)"
+                        description="The chance an infected person has to recover per unit time."
+                        unit="recover per day" />
+                </div>
+
+                <div className="p-2 gap-2 border border-gray-400' rounded-md shadow" >
+                    <div className="flex justify-center gap-1">
+                        <div className="">
+                            R0: 
                         </div>
-                        Peak infections occurred on day
+                        { R0.toFixed(2) }
                     </div>
+                    Peak infections occurred on day
                 </div>
             </div>
         )

@@ -5,7 +5,7 @@ This module contains the GET and POST routes for the app.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.models import fit_sir
+from app.models import fit_sir, fit_seir
 
 app = FastAPI()
 
@@ -35,15 +35,19 @@ params = {
 async def read_root() -> dict:
     return {"message" : "Welcome to the website!"}
 
-@app.get("/api", tags = ["api"])
+@app.get("/sir", tags = ["sir"])
 async def show_graph() -> dict:
     return {"outbreaks" : fit_sir(**params)}
+
+@app.get("/seir", tags = ["seir"])
+async def show_graph() -> dict:
+    return {"outbreaks" : fit_seir(**params)}
 
 @app.get("/params", tags = [])
 async def get_params() -> dict:
     return {"params" : params}
 
-@app.post("/api", tags = ["api"])
+@app.post("/sir", tags = ["sir"])
 async def update_graph(update: dict) -> dict:
     params[update.get("name")] = update.get("value")
     return {"message" : "Graph updated."}
