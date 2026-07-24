@@ -12,11 +12,27 @@ export default function Chart() {
     const [model, setModel] = useState()
     const [seir, setSeir] = useState(false)
 
-    const [params, setParams] = useState<ModelParam>({days: 50, beta: 1/2, gamma: 1/5, N: 1000, I0: 6, R0: 0})
+    const [params, setParams] = useState<ModelParam>({days: 50, beta: 1/2, gamma: 1/5, N: 1000, I0: 6})
 
     const updateParam = (name: string, value: number) => {
         {/* Change a parameter */}
         setParams({ ...params, [name]: value })
+    }
+
+    const changeSEIR = () => {
+        const next = !seir
+        setSeir(next)
+
+        if (next == true) {
+            setParams({ ...params, E0: 6, sigma: 1/5 })
+        } else {
+            setParams(prev => {
+                const copy = { ...params }
+                delete copy.E0
+                delete copy.sigma
+                return copy
+            })
+        }
     }
 
     const fitModel = async () => {
@@ -47,7 +63,7 @@ export default function Chart() {
                 
                     <label className="flex justify-end items-center p-2">
                             SEIR mode { seir === true ? "enabled" : "disabled" }
-                            <input type="checkbox" className="appearance-none peer" onChange={ () => setSeir(!seir) } />
+                            <input type="checkbox" className="appearance-none peer" onChange={ () => { changeSEIR() } } />
                             <span className="w-16 h-10 flex items-center flex-shrink-0 ml-4 p-1 bg-gray-300 rounded-full after:w-8 after:h-8 after:bg-white after:rounded-full after:shadow-md peer-checked:bg-green-400 duration-300 ease-in-out after:duration-300 peer-checked:after:translate-x-6"></span>
                     </label>
                 </div>
@@ -65,8 +81,9 @@ export default function Chart() {
                         <Tooltip formatter={(value) => Number(value).toFixed(2)} />
                         <Legend wrapperStyle={ {paddingTop: 25} }/>
 
-                        {/* Lines for S, I, R */}
+                        {/* Lines for S, E?, I, R */}
                         <Line type="monotone" dataKey="susceptible" stroke="#2846a8" activeDot={{ r: 8 }} />
+                        {seir && <Line type="monotone" dataKey="exposed" stroke="#db25b7" activeDot={{ r: 8 }} />}
                         <Line type="monotone" dataKey="infectious" stroke="#d18d26" activeDot={{ r: 8 }} />
                         <Line type="monotone" dataKey="recovered" stroke="#219e1b" activeDot={{ r: 8 }} />
                             

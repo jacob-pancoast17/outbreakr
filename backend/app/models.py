@@ -51,7 +51,7 @@ def seir_system(A, T, beta, gamma, sigma, N):
 
     return [
         -beta / N * I * S,
-        beta * I * S - sigma * E,
+        beta / N * I * S - sigma * E,
         sigma * E - gamma * I,
         gamma * I
     ]
@@ -92,7 +92,7 @@ def fit_sir(days, beta, gamma, N, I0):
 
     return sir
 
-def fit_seir(days, beta, gamma, sigma, N, E0, I0, R0):
+def fit_seir(days, beta, gamma, sigma, N, E0, I0):
     '''
     Solves the system of differential equations for the SEIR model.
 
@@ -102,8 +102,8 @@ def fit_seir(days, beta, gamma, sigma, N, E0, I0, R0):
         gamma (float): Recovery rate (reciprocal of average days in infectious state).
         sigma (float): The rate at which exposed individuals become infectious (reciprocal of average latent period).
         N (int): Population size.
+        E0 (int): The number of people exposed at time step 0.
         I0 (int): The number of people infected at time step 0.
-        R0 (int): The number of people recovered at time step 0.
 
     Returns:
         matrix: A (# days) * 4 matrix showing the solved system of diffeqs for the fit SEIR model.
@@ -111,6 +111,7 @@ def fit_seir(days, beta, gamma, sigma, N, E0, I0, R0):
 
     times = np.arange(0, days + 1, 1)
     S0 = N - E0 - I0
+    R0 = 0
 
     solved = odeint(seir_system, y0 = [S0, E0, I0, R0], t = times, args = (beta, gamma, sigma, N))
     solved_transposed = solved.transpose()

@@ -67,7 +67,7 @@ export default function Dashboard({ params, seir, onUpdate }: {
 
                 </div>
 
-                <div className="grid grid-cols-2">
+                <div className={`grid ${seir ? 'grid-cols-3' : 'grid-cols-2'}`}>
                     {/* Transmission Rate (β) */}
                     <ModelParameterSlider 
                         name="beta" 
@@ -91,6 +91,16 @@ export default function Dashboard({ params, seir, onUpdate }: {
                         title="Recovery Rate (γ)"
                         description="The chance an infected person has to recover per unit time."
                         unit="recover per day" />
+
+                    {/* Incubation Rate (σ) */}
+                    {seir &&
+                        <ModelParameterSlider 
+                            name="sigma" 
+                            inputParam={ { max:2, by:0.1, start:params.sigma } as SliderInputParam } 
+                            onUpdate={ onUpdate } 
+                            title="Incubation Rate (σ)"
+                            description="The rate at which exposed individuals become infectious." />
+                    }
                 </div>
 
                 <div className="p-2 gap-2 border border-gray-400' rounded-md shadow" >

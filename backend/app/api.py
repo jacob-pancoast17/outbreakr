@@ -26,9 +26,9 @@ app.add_middleware(
 async def read_root() -> dict:
     return {"message" : "Welcome to the website!"}
 
-# @app.get("/seir", tags = ["seir"])
-# async def show_graph() -> dict:
-#     return {"outbreaks" : fit_seir(**params)}
+@app.post("/seir")
+async def show_graph(params: dict) -> dict:
+    return {"outbreaks" : fit_seir(**params)}
 
 @app.post("/sir")
 async def show_graph(params: dict) -> dict:
