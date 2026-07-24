@@ -27,10 +27,7 @@ export default function ModelParameterSlider({ name, inputParam, onUpdate, title
 
         const { min = 0, max, by, start } = inputParam
 
-        const [count, setCount] = useState(() => {
-            const saved = localStorage.getItem(`param-${name}`)
-            return saved !== null ? Number(saved) : start
-        })
+        const [count, setCount] = useState(start)
 
         const [change, setChange] = useState(false)
 
@@ -41,17 +38,9 @@ export default function ModelParameterSlider({ name, inputParam, onUpdate, title
         }, [max])
 
         const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
             const value = Number(event.currentTarget.value)
-
             setCount(value)
-            localStorage.setItem(`param-${name}`, String(value))
-
-            await fetch("http://localhost:8000/sir", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, value })
-            })
-            
             onUpdate(name, value)
         }
 

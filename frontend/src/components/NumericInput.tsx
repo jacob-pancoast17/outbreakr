@@ -29,11 +29,11 @@ export default function NumericInput({ name, inputParam, onUpdate, description, 
         }, [max])
 
         const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
             let value = Number(event.currentTarget.value)
             value = Math.max(Math.min(max, value), min)
-
             setCount(value)
-            onUpdate(name, count)
+            onUpdate(name, value)
         }
 
         return (

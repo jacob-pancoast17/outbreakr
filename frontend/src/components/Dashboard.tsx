@@ -16,7 +16,7 @@ import { AdvancedInputParam } from '../types/AdvancedInputParam'
  * @returns Dashboard component for React used in Graph.tsx.
  */
 export default function Dashboard({ params, seir, onUpdate }: {
-    params: {days: number, beta: number, gamma: number, N: number, I0: number, R0: number};
+    params: {days: number, beta: number, gamma: number, N: number, I0: number};
     seir: boolean;
     onUpdate: (name: string, value: number) => void }) {
         
@@ -98,7 +98,7 @@ export default function Dashboard({ params, seir, onUpdate }: {
                         <div className="">
                             R0: 
                         </div>
-                        { params.R0.toFixed(2) }
+                        { (params.beta / params.gamma).toFixed(2) }
                     </div>
                     Peak infections occurred on day
                 </div>
