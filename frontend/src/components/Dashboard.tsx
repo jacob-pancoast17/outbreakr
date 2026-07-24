@@ -16,7 +16,7 @@ import { AdvancedInputParam } from '../types/AdvancedInputParam'
  * @returns Dashboard component for React used in Graph.tsx.
  */
 export default function Dashboard({ params, seir, onUpdate }: {
-    params: {days: number, beta: number, gamma: number, N: number, I0: number};
+    params: {days: number, beta: number, gamma: number, sigma?: number, N: number, I0: number, E0?: number};
     seir: boolean;
     onUpdate: (name: string, value: number) => void }) {
         
