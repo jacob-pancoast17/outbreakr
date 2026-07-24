@@ -56,7 +56,7 @@ def seir_system(A, T, beta, gamma, sigma, N):
         gamma * I
     ]
 
-def fit_sir(days, beta, gamma, N, I0, R0):
+def fit_sir(days, beta, gamma, N, I0):
     '''
     Solves the system of differential equations for the SIR model.
 
@@ -74,6 +74,7 @@ def fit_sir(days, beta, gamma, N, I0, R0):
 
     times = np.arange(0, days + 1, 1)
     S0 = N - I0
+    R0 = 0
 
     solved = odeint(sir_system, y0 = [S0, I0, R0], t = times, args = (beta, gamma, N))
     solved_transposed = solved.transpose()
