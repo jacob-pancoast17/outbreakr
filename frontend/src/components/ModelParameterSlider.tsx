@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { SliderInputParam } from '../types/SliderInputParam'
-import  Advanced from './Advanced'
+/*import  Advanced from './Advanced'*/
 import { AdvancedInputParam } from '../types/AdvancedInputParam';
 
 /**
@@ -16,7 +16,7 @@ import { AdvancedInputParam } from '../types/AdvancedInputParam';
  * 
  * @returns Slider component for React used in App.tsx
  */
-export default function ModelParameterSlider({ name, inputParam, onUpdate, title, description, unit, advanced }: { 
+export default function ModelParameterSlider({ name, inputParam, onUpdate, title, description, unit }: { 
     name: string; 
     inputParam: SliderInputParam;
     onUpdate: (name: string, value: number) => void;
@@ -29,13 +29,13 @@ export default function ModelParameterSlider({ name, inputParam, onUpdate, title
 
         const [count, setCount] = useState(start)
 
-        const [change, setChange] = useState(false)
+        /*const [change, setChange] = useState(false)*/
 
         useEffect(() => {
             if (count > max) {
                 setCount(max)
             }
-        }, [max])
+        }, [max, count])
 
         const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
 

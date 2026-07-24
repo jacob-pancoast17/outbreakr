@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ResponsiveContainer, CartesianGrid, Line, LineChart, XAxis, YAxis, Legend, Tooltip, Label } from 'recharts';
 import Dashboard from './Dashboard'
 import { ModelParam } from '../types/ModelParam'
+import { Day } from '../types/Day'
 
 /**
  * Creates a Graph component using the FastAPI backend.
@@ -10,7 +11,7 @@ import { ModelParam } from '../types/ModelParam'
  */
 export default function Chart() {
     const [model, setModel] = useState()
-    const [maxInfectious, setMaxInfectious] = useState<{day: number, susceptible: number, exposed?: number, infectious: number, recovered: number}>({day: 0, susceptible: 0, exposed: 0, infectious: 0, recovered: 0})
+    const [maxInfectious, setMaxInfectious] = useState<Day>({day: 0, susceptible: 0, exposed: 0, infectious: 0, recovered: 0})
     const [totalInfected, setTotalInfected] = useState<number>(0)
     const [seir, setSeir] = useState(false)
 
@@ -29,7 +30,7 @@ export default function Chart() {
             setParams({ ...params, E0: 6, sigma: 1/5 })
         } else {
             setParams(prev => {
-                const copy = { ...params }
+                const copy = { ...prev }
                 delete copy.E0
                 delete copy.sigma
                 return copy
@@ -50,7 +51,7 @@ export default function Chart() {
         setModel(model.outbreaks)
 
         {/* Find the day with the most infectious people */}
-        setMaxInfectious(model.outbreaks.reduce((max, curr) => curr.infectious > max.infectious ? curr : max))
+        setMaxInfectious(model.outbreaks.reduce((max: Day, curr: Day) => curr.infectious > max.infectious ? curr : max))
 
         {/* Find how many people were infected in total */}
         setTotalInfected(params.N - model.outbreaks.at(-1).susceptible)
