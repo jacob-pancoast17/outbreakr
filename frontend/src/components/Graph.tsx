@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ResponsiveContainer, CartesianGrid, Line, LineChart, XAxis, YAxis, Legend, Tooltip, Label } from 'recharts';
 import Dashboard from './Dashboard'
+import { ModelParam } from '../types/ModelParam'
 
 /**
  * Creates a Graph component using the FastAPI backend.
@@ -8,20 +9,32 @@ import Dashboard from './Dashboard'
  * @returns Graph component for React used in App.tsx.
  */
 export default function Chart() {
-    const [outbreak, setOutbreak] = useState([])
-    const [pop, setPop] = useState(1000)
+    const [model, setModel] = useState()
     const [seir, setSeir] = useState(false)
 
-    const fetchOutbreak = async () => {
+    const [params, setParams] = useState<ModelParam>({days: 50, beta: 1/2, gamma: 1/5, N: 1000, I0: 6, R0: 0})
+
+    const updateParam = (name: string, value: number) => {
+        {/* Change a parameter */}
+        setParams({ ...params, [name]: value })
+    }
+
+    const fitModel = async () => {
+        {/* Fit the model and grab the results from POST */}
         const endpoint = seir ? "seir" : "sir"
-        const response = await fetch(`http://localhost:8000/${endpoint}`)
-        const outbreak = await response.json()
-        setOutbreak(outbreak.outbreaks)
+        console.log(JSON.stringify(params))
+        const response = await fetch(`http://localhost:8000/${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(params)
+        })
+        const model = await response.json()
+        setModel(model.outbreaks)
     }
 
     useEffect(() => {
-        fetchOutbreak()
-    }, [])
+        fitModel()
+    }, [params, seir])
 
     return (
         <div className="grid grid-cols-[1.5fr_1fr] gap-10 p-4 md:p-7 lg:p-10">
@@ -40,7 +53,7 @@ export default function Chart() {
                 </div>
                 <ResponsiveContainer width="100%" aspect={1.618}>
                     <LineChart
-                        data={outbreak}
+                        data={ model }
                         margin={ {bottom: 20, top: 20, left:20} }>
                         <CartesianGrid strokeDasharray="5 5" />
                         <XAxis dataKey="day">
@@ -61,7 +74,7 @@ export default function Chart() {
                 </ResponsiveContainer>
             </div>
 
-            <Dashboard population={ pop } seir={ seir } onUpdate={ fetchOutbreak } onChange={ setPop }/>
+            <Dashboard params = { params } seir={ seir } onUpdate={ updateParam } />
             
         </div>
     )

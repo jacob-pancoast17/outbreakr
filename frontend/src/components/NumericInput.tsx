@@ -7,32 +7,25 @@ import { NumberInputParam } from '../types/NumberInputParam'
  * @param name - The name of the value the Slider changes (string).
  * @param inputParam - The values to be used for the input box (NumberInputParam interface).
  * @param onUpdate - The function that runs whenever an input is updated (function).
- * @param onChange - The function that runs when the population is changed (function).
  * 
  * @returns Slider component for React used in App.tsx
  */
-export default function NumericInput({ name, inputParam, onUpdate, onChangeValue, description, unit, vertical }: { 
+export default function NumericInput({ name, inputParam, onUpdate, description, unit, vertical }: { 
     name: string;
     inputParam: NumberInputParam;
-    onUpdate: () => void;
-    onChangeValue?: (value: number) => void;
+    onUpdate: (name: string, value: number) => void;
     description: string;
     unit?: string;
     vertical?: boolean }) {
 
         const { min, max, start } = inputParam
 
-        const [count, setCount] = useState(() => {
-            const saved = localStorage.getItem(`param-${name}`)
-            return saved !== null ? Number(saved) : start
-        })
+        const [count, setCount] = useState(start)
 
         useEffect(() => {
             if (count > max) {
                 setCount(max)
-                onChangeValue?.(max)
             }
-
         }, [max])
 
         const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,16 +33,7 @@ export default function NumericInput({ name, inputParam, onUpdate, onChangeValue
             value = Math.max(Math.min(max, value), min)
 
             setCount(value)
-            localStorage.setItem(`param-${name}`, String(value))
-            onChangeValue?.(value)
-
-            await fetch("http://localhost:8000/api", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, value })
-            })
-            
-            onUpdate()
+            onUpdate(name, count)
         }
 
         return (

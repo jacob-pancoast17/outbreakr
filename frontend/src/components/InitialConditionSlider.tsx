@@ -7,16 +7,14 @@ import { SliderInputParam } from '../types/SliderInputParam'
  * @param name - The name of the value the Slider changes (string). 
  * @param inputParam - The values to be used for the input box (NumberInputParam interface).
  * @param onUpdate - The function that runs whenever an input is updated (function).
- * @param onChange - The function that runs when the population is changed (function).
  * @param title - The value the slider changes (string).
  * 
  * @returns Slider component for React used in App.tsx
  */
-export default function InitialConditionSlider({ name, inputParam, onUpdate, onChangeValue, title }: { 
+export default function InitialConditionSlider({ name, inputParam, onUpdate, title }: { 
     name: string; 
     inputParam: SliderInputParam;
-    onUpdate: () => void;
-    onChangeValue?: (value: number) => void ;
+    onUpdate: (name: string, value: number) => void;
     title: string;}) {
 
         const { min = 0, max, by, start } = inputParam
@@ -29,7 +27,6 @@ export default function InitialConditionSlider({ name, inputParam, onUpdate, onC
         useEffect(() => {
             if (count > max) {
                 setCount(max)
-                onChangeValue?.(max)
             }
         }, [max])
 
@@ -38,7 +35,6 @@ export default function InitialConditionSlider({ name, inputParam, onUpdate, onC
 
             setCount(value)
             localStorage.setItem(`param-${name}`, String(value))
-            onChangeValue?.(value)
 
             await fetch("http://localhost:8000/sir", {
                 method: "POST",
@@ -46,7 +42,7 @@ export default function InitialConditionSlider({ name, inputParam, onUpdate, onC
                 body: JSON.stringify({ name, value })
             })
             
-            onUpdate()
+            onUpdate(name, count)
         }
 
         return (

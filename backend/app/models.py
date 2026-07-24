@@ -81,8 +81,13 @@ def fit_sir(days, beta, gamma, N, I0, R0):
 
     sir = []
 
-    for i in range(len(solved_transposed[0])):
-        sir.append({"day": i, "susceptible": solved_transposed[0][i], "infectious": solved_transposed[1][i], "recovered": solved_transposed[2][i]})
+    for n in range(len(solved_transposed[0])):
+
+        s = solved_transposed[0][n]
+        i = solved_transposed[1][n]
+        r = solved_transposed[2][n]
+
+        sir.append({"day": n, "susceptible": max(0, s), "infectious": max(0, i), "recovered": max(0, r)})
 
     return sir
 

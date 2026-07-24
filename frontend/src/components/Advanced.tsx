@@ -16,7 +16,7 @@ export default function Advanced({advancedInputParam}: {
             setCount(value)
             localStorage.setItem(`param-${name}`, String(value))
 
-            await fetch("http://localhost:8000/api", {
+            await fetch("http://localhost:8000/sir", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, value })

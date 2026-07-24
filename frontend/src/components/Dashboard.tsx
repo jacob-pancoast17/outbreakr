@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import ModelParameterSlider from './ModelParameterSlider'
 import InitialConditionSlider from './InitialConditionSlider'
 import NumericInput from './NumericInput'
@@ -9,36 +9,19 @@ import { AdvancedInputParam } from '../types/AdvancedInputParam'
 /**
  * Creates a Dashboard component with graph inputs.
  * 
- * @param population - The current population size (number).
+ * @param params - The model parameters (dictionary).
  * @param onUpdate - The function that runs whenever an input is updated (function).
- * @param onChange - The function that runs when the population is changed (function).
  * @param seir - Is the dashboard currently in SEIR mode? (boolean)
  * 
  * @returns Dashboard component for React used in Graph.tsx.
  */
-export default function Dashboard({ population, seir, onUpdate, onChange }: {
-    population: number,
-    seir: boolean,
-    onUpdate: () => void,
-    onChange: (value: number) => void }) {
-
-        const [R0, setR0] = useState(0)
-    
-        const fetchR0 = async () => {
-            const response = await fetch("http://localhost:8000/params")
-            const data = await response.json()
-            const params = data.params
-            setR0(params.beta / params.gamma)
-        }
-
+export default function Dashboard({ params, seir, onUpdate }: {
+    params: {days: number, beta: number, gamma: number, N: number, I0: number, R0: number};
+    seir: boolean;
+    onUpdate: (name: string, value: number) => void }) {
+        
         useEffect(() => {
-            fetchR0()
         }, [])
-
-        const handleUpdate = () => {
-            onUpdate()
-            fetchR0()
-        }
 
         return (
             <div className="flex flex-col max-w-lg gap-y-3">
@@ -52,17 +35,16 @@ export default function Dashboard({ population, seir, onUpdate, onChange }: {
                 {/* Days input */}
                 <NumericInput 
                     name="days" 
-                    inputParam={ { min:1, max:1000, start:50 } as NumberInputParam }  
-                    onUpdate={ handleUpdate } 
+                    inputParam={ { min:1, max:1000, start:params.days } as NumberInputParam }  
+                    onUpdate={ onUpdate } 
                     description="Outbreak Length"
                     unit="days"/>
                 
                 {/* Pop size input (N) */}
                 <NumericInput 
                     name="N" 
-                    inputParam={ { min:0, max:1000, start:population } as NumberInputParam } 
-                    onUpdate={ handleUpdate } 
-                    onChangeValue={ onChange }
+                    inputParam={ { min:0, max:1000, start:params.N } as NumberInputParam } 
+                    onUpdate={ onUpdate } 
                     description="Population Size (N)"
                     vertical={ true }/>
 
@@ -71,32 +53,26 @@ export default function Dashboard({ population, seir, onUpdate, onChange }: {
                     { seir === true && (
                     <InitialConditionSlider
                         name="E0" 
-                        inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
-                        onUpdate={ handleUpdate } 
+                        inputParam={ { max:params.N, by:1, start:0 } as SliderInputParam } 
+                        onUpdate={ onUpdate } 
                         title="Initial Exposed Population (E₀)"/>
                     )}
 
                     {/* Initial infected pop (I₀) */}
                     <InitialConditionSlider
                         name="I0" 
-                        inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
-                        onUpdate={ handleUpdate } 
+                        inputParam={ { max:params.N, by:1, start:params.I0 } as SliderInputParam } 
+                        onUpdate={ onUpdate } 
                         title="Initial Infected Population (I₀)"/>
 
-                    {/* Initial recovered pop (R₀) */}
-                    <InitialConditionSlider
-                        name="R0" 
-                        inputParam={ { max:population, by:1, start:0 } as SliderInputParam } 
-                        onUpdate={ handleUpdate } 
-                        title="Initial Recovered Population (R₀)"/>
                 </div>
 
                 <div className="grid grid-cols-2">
                     {/* Transmission Rate (β) */}
                     <ModelParameterSlider 
                         name="beta" 
-                        inputParam={ { max:2, by:0.1, start:0.5 } as SliderInputParam } 
-                        onUpdate={ handleUpdate }
+                        inputParam={ { max:2, by:0.1, start:params.beta } as SliderInputParam } 
+                        onUpdate={ onUpdate }
                         title="Transmission Rate (β)"
                         description="The average number of new infections an infected person creates per unit time."
                         unit="per person, per day"
@@ -110,8 +86,8 @@ export default function Dashboard({ population, seir, onUpdate, onChange }: {
                     {/* Recovery Rate (γ) */}
                     <ModelParameterSlider 
                         name="gamma" 
-                        inputParam={ { max:2, by:0.1, start:0.2 } as SliderInputParam } 
-                        onUpdate={ handleUpdate } 
+                        inputParam={ { max:2, by:0.1, start:params.gamma } as SliderInputParam } 
+                        onUpdate={ onUpdate } 
                         title="Recovery Rate (γ)"
                         description="The chance an infected person has to recover per unit time."
                         unit="recover per day" />
@@ -122,7 +98,7 @@ export default function Dashboard({ population, seir, onUpdate, onChange }: {
                         <div className="">
                             R0: 
                         </div>
-                        { R0.toFixed(2) }
+                        { params.R0.toFixed(2) }
                     </div>
                     Peak infections occurred on day
                 </div>
