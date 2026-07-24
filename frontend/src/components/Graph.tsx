@@ -29,7 +29,7 @@ export default function Chart() {
         if (next == true) {
             setParams({ ...params, E0: 6, sigma: 1/5 })
         } else {
-            setParams(prev => {
+            setParams((prev: ModelParam) => {
                 const copy = { ...prev }
                 delete copy.E0
                 delete copy.sigma
