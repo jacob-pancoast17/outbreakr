@@ -53,7 +53,7 @@ export default function Dashboard({ params, seir, onUpdate }: {
                     { seir === true && (
                     <InitialConditionSlider
                         name="E0" 
-                        inputParam={ { max:params.N, by:1, start:0 } as SliderInputParam } 
+                        inputParam={ { max:params.N, by:1, start:params.E0 } as SliderInputParam } 
                         onUpdate={ onUpdate } 
                         title="Initial Exposed Population (E₀)"/>
                     )}
@@ -90,7 +90,7 @@ export default function Dashboard({ params, seir, onUpdate }: {
                         onUpdate={ onUpdate } 
                         title="Recovery Rate (γ)"
                         description="The chance an infected person has to recover per unit time."
-                        unit="recover per day" />
+                        unit="per day" />
 
                     {/* Incubation Rate (σ) */}
                     {seir &&
@@ -99,18 +99,9 @@ export default function Dashboard({ params, seir, onUpdate }: {
                             inputParam={ { max:2, by:0.1, start:params.sigma } as SliderInputParam } 
                             onUpdate={ onUpdate } 
                             title="Incubation Rate (σ)"
-                            description="The rate at which exposed individuals become infectious." />
+                            description="The rate at which exposed individuals become infectious."
+                            unit="per day" />
                     }
-                </div>
-
-                <div className="p-2 gap-2 border border-gray-400' rounded-md shadow" >
-                    <div className="flex justify-center gap-1">
-                        <div className="">
-                            R0: 
-                        </div>
-                        { (params.beta / params.gamma).toFixed(2) }
-                    </div>
-                    Peak infections occurred on day
                 </div>
             </div>
         )

@@ -67,9 +67,9 @@ export default function ModelParameterSlider({ name, inputParam, onUpdate, title
                         { unit }
                     </div>
                 </div>
-
+                
                 {/** Advanced options button (OPTIONAL) */}
-                { advanced !== undefined && (
+                {/* { advanced !== undefined && (
                     <div className="flex text-sm text-slate-500 italic hover:bg-gray-100 px-4 w-fit items-center justify-self-center">
                         <button type="button" onClick={ () => setChange(!change) }>Advanced Options</button>
                     </div>
@@ -79,7 +79,7 @@ export default function ModelParameterSlider({ name, inputParam, onUpdate, title
                     <div>
                         <Advanced advancedInputParam={ advanced }/>
                     </div>
-                )}
+                )} */}
             </div>
         )
 }
