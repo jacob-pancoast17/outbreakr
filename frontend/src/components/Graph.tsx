@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ResponsiveContainer, CartesianGrid, Line, LineChart, XAxis, YAxis, Legend, Tooltip, Label } from 'recharts';
 import Dashboard from './Dashboard'
-import { ModelParam } from '../types/ModelParam'
+import { ModelParam } from '../types/ModelParam';
 import { Day } from '../types/Day'
 
 /**
@@ -36,7 +36,7 @@ export default function Chart() {
                 return copy
             })
         }
-    }
+    }   
 
     const fitModel = async () => {
         {/* Fit the model and grab the results from POST */}
