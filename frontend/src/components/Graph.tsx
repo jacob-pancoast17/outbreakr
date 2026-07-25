@@ -14,7 +14,7 @@ export default function Chart() {
     const [maxInfectious, setMaxInfectious] = useState<Day>({day: 0, susceptible: 0, exposed: 0, infectious: 0, recovered: 0})
     const [totalInfected, setTotalInfected] = useState<number>(0)
     const [seir, setSeir] = useState<boolean>(false)
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(true)
 
     const [params, setParams] = useState<ModelParam>({days: 50, beta: 1/2, gamma: 1/5, N: 1000, I0: 6})
 
@@ -42,7 +42,6 @@ export default function Chart() {
     const fitModel = async () => {
         {/* Fit the model and grab the results from POST */}
         const endpoint = seir ? "seir" : "sir"
-        setLoading(true)
 
         try {
             /** Local dev */
@@ -68,7 +67,9 @@ export default function Chart() {
             {/* Find how many people were infected in total */}
             setTotalInfected(params.N - model.outbreaks.at(-1).susceptible)
         } finally {
-            setLoading(false)
+            if (loading === true) {
+                setLoading(false)
+            }
         }
     }
 
