@@ -14,6 +14,7 @@ export default function Chart() {
     const [maxInfectious, setMaxInfectious] = useState<Day>({day: 0, susceptible: 0, exposed: 0, infectious: 0, recovered: 0})
     const [totalInfected, setTotalInfected] = useState<number>(0)
     const [seir, setSeir] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const [params, setParams] = useState<ModelParam>({days: 50, beta: 1/2, gamma: 1/5, N: 1000, I0: 6})
 
@@ -41,31 +42,34 @@ export default function Chart() {
     const fitModel = async () => {
         {/* Fit the model and grab the results from POST */}
         const endpoint = seir ? "seir" : "sir"
-        console.log(JSON.stringify(params))
+        setLoading(true)
 
-        /** Local dev
-        const response = await fetch(`http://localhost:8000/${endpoint}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(params)
-        })
-        */
+        try {
+            /** Local dev */
+            // const response = await fetch(`http://localhost:8000/${endpoint}`, {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify(params)
+            // })
 
-        /** Server dev */
-        const response = await fetch(`https://outbreakr.onrender.com/${endpoint}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(params)
-        })
+            /** Server dev */
+            const response = await fetch(`https://outbreakr.onrender.com/${endpoint}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(params)
+            })
 
-        const model = await response.json()
-        setModel(model.outbreaks)
+            const model = await response.json()
+            setModel(model.outbreaks)
 
-        {/* Find the day with the most infectious people */}
-        setMaxInfectious(model.outbreaks.reduce((max: Day, curr: Day) => curr.infectious > max.infectious ? curr : max))
+            {/* Find the day with the most infectious people */}
+            setMaxInfectious(model.outbreaks.reduce((max: Day, curr: Day) => curr.infectious > max.infectious ? curr : max))
 
-        {/* Find how many people were infected in total */}
-        setTotalInfected(params.N - model.outbreaks.at(-1).susceptible)
+            {/* Find how many people were infected in total */}
+            setTotalInfected(params.N - model.outbreaks.at(-1).susceptible)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -76,7 +80,7 @@ export default function Chart() {
         <div className="grid grid-cols-[1.5fr_1fr] gap-10 p-4 md:p-7 lg:p-10">
             
             {/* Graph */}
-            <div className="min-w-0">
+            <div className="min-w-0 relative">
                 <div className="grid grid-cols-3 p-5">
 
                     <div></div> { /* Placeholder */ }
@@ -139,6 +143,9 @@ export default function Chart() {
                             
                     </LineChart>
                 </ResponsiveContainer>
+                
+                {loading && <p className="absolute inset-0 flex justify-center items-center text-gray-500 animate-pulse">Loading the model -- the server may take up to a minute to wake up.</p>}
+
             </div>
 
             {/* Dashboard */}

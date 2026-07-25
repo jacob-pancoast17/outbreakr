@@ -16,13 +16,13 @@ export default function Advanced({advancedInputParam}: {
             setCount(value)
             localStorage.setItem(`param-${name}`, String(value))
 
-            /** Local dev
-            await fetch("http://localhost:8000/sir", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, value })
-            })
-            */
+            /** Local dev */
+            // await fetch("http://localhost:8000/sir", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify({ name, value })
+            // })
+            
 
             /** Server dev */
             await fetch("https://outbreakr.onrender.com/sir", {
