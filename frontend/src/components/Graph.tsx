@@ -42,11 +42,22 @@ export default function Chart() {
         {/* Fit the model and grab the results from POST */}
         const endpoint = seir ? "seir" : "sir"
         console.log(JSON.stringify(params))
+
+        /** Local dev
         const response = await fetch(`http://localhost:8000/${endpoint}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(params)
         })
+        */
+
+        /** Server dev */
+        const response = await fetch(`https://outbreakr.onrender.com/${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(params)
+        })
+
         const model = await response.json()
         setModel(model.outbreaks)
 
