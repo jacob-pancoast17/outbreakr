@@ -10,10 +10,10 @@ import { Day } from '../types/Day'
  * @returns Graph component for React used in App.tsx.
  */
 export default function Chart() {
-    const [model, setModel] = useState()
+    const [model, setModel] = useState<Day[]>([])
     const [maxInfectious, setMaxInfectious] = useState<Day>({day: 0, susceptible: 0, exposed: 0, infectious: 0, recovered: 0})
     const [totalInfected, setTotalInfected] = useState<number>(0)
-    const [seir, setSeir] = useState(false)
+    const [seir, setSeir] = useState<boolean>(false)
 
     const [params, setParams] = useState<ModelParam>({days: 50, beta: 1/2, gamma: 1/5, N: 1000, I0: 6})
 
@@ -27,10 +27,10 @@ export default function Chart() {
         setSeir(next)
 
         if (next == true) {
-            setParams({ ...params, E0: 6, sigma: 1/5 })
+            setParams({ ...params, E0: 6, sigma: 1/5 } as ModelParam)
         } else {
             setParams((prev: ModelParam) => {
-                const copy = { ...prev }
+                const copy: ModelParam = { ...prev }
                 delete copy.E0
                 delete copy.sigma
                 return copy

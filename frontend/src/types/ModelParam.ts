@@ -3,5 +3,7 @@ export interface ModelParam {
     beta: number;
     gamma: number;
     N: number;
-    I0: 6
+    I0: number;
+    sigma?: number;
+    E0?: number;
 }
